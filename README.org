@@ -14,4 +14,4 @@
   | =drm=  | =docker container rm [container name]=       |
   | =drmf= | =docker container rm -f [container name]=    |
   | =dcin= | =docker container inspect [container name]=  |
-  | =dstp= | =docker exec -it [container name] /bin/bash= |
+  | =dxb=  | =docker exec -it [container name] /bin/bash= |
