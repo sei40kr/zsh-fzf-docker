@@ -1,0 +1,17 @@
+#+TITLE: zsh-fzf-docker
+
+* Install
+** Install with zplugin
+   #+BEGIN_SRC sh
+     zplugin light sei40kr/zsh-fzf-docker
+   #+END_SRC
+
+* Commands
+  | =dirm= | =docker image rm [image name]=               |
+  | =dii=  | =docker image inspect [image name]=          |
+  | =dst=  | =docker container start [container name]=    |
+  | =dstp= | =docker container stop [container name]=     |
+  | =drm=  | =docker container rm [container name]=       |
+  | =drmf= | =docker container rm -f [container name]=    |
+  | =dcin= | =docker container inspect [container name]=  |
+  | =dstp= | =docker exec -it [container name] /bin/bash= |
