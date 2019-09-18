@@ -1,13 +1,13 @@
 # -*- mode: sh -*-
 
-# dvi
+# fzf-docker-exec-bash
 # author: Seong Yong-ju <sei40kr@gmail.com>
 
-dvi() {
-    docker volume ls |
+fzf-docker-exec-bash() {
+    docker container ls |
         eval "fzf ${FZF_DEFAULT_OPTS} --header-lines=1" |
         awk '{ print $1 }' |
-        xargs docker volume inspect
+        xargs -I _ docker exec -it _ /bin/bash
 }
 
-dvi "$@"
+fzf-docker-exec-bash "$@"

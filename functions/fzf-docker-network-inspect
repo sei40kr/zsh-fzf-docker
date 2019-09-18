@@ -1,13 +1,13 @@
 # -*- mode: sh -*-
 
-# dii
+# fzf-docker-network-inspect
 # author: Seong Yong-ju <sei40kr@gmail.com>
 
-dii() {
-    docker image ls |
+fzf-docker-network-inspect() {
+    docker network ls |
         eval "fzf ${FZF_DEFAULT_OPTS} --header-lines=1" |
         awk '{ print $1 }' |
-        xargs docker image inspect
+        xargs docker network inspect
 }
 
-dii "$@"
+fzf-docker-network-inspect "$@"

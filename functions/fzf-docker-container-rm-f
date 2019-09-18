@@ -1,13 +1,13 @@
 # -*- mode: sh -*-
 
-# dirm
+# fzf-docker-container-rm-f
 # author: Seong Yong-ju <sei40kr@gmail.com>
 
-dirm() {
-    docker images -a |
+fzf-docker-container-rm-f() {
+    docker container ls -a |
         eval "fzf ${FZF_DEFAULT_OPTS} -m --header-lines=1" |
         awk '{ print $1 }' |
-        xargs docker image rm
+        xargs docker container rm -f
 }
 
-dirm "$@"
+fzf-docker-container-rm-f "$@"

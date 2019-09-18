@@ -1,13 +1,13 @@
 # -*- mode: sh -*-
 
-# dni
+# fzf-docker-image-inspect
 # author: Seong Yong-ju <sei40kr@gmail.com>
 
-dni() {
-    docker network ls |
+fzf-docker-image-inspect() {
+    docker image ls |
         eval "fzf ${FZF_DEFAULT_OPTS} --header-lines=1" |
         awk '{ print $1 }' |
-        xargs docker network inspect
+        xargs docker image inspect
 }
 
-dni "$@"
+fzf-docker-image-inspect "$@"
