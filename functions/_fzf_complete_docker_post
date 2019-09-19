@@ -1,0 +1,10 @@
+# -*- mode: sh -*-
+
+# _fzf_complete_docker_post
+# author: Seong Yong-ju <sei40kr@gmail.com>
+
+_fzf_complete_docker_post() {
+    awk '{ print $1 }'
+}
+
+_fzf_complete_docker_post "$@"

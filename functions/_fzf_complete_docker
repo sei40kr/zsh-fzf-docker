@@ -1,0 +1,84 @@
+# -*- mode: sh -*-
+
+# _fzf_complete_docker
+# author: Seong Yong-ju <sei40kr@gmail.com>
+
+__fzf_complete_docker_start() {
+    docker container ls -a -f status=created -f status=exited |
+        _fzf_complete '-m --header-lines=1' "$@"
+}
+
+__fzf_complete_docker_stop() {
+    docker container ls | _fzf_complete '-m --header-lines=1' "$@"
+}
+
+__fzf_complete_docker_exec() {
+    docker container ls | _fzf_complete '--header-lines=1' "$@"
+}
+
+_fzf_complete_docker() {
+    local tokens=( "${(z)1}" )
+    local cmd="${tokens[2]}"
+    local subcmd="${tokens[3]}"
+
+    case "$cmd" in
+        start )
+            __fzf_complete_docker_start
+            ;;
+
+        stop )
+            __fzf_complete_docker_stop
+            ;;
+
+        container )
+            case "$subcmd" in
+                exec )
+                    __fzf_complete_docker_exec
+                    ;;
+
+                inspect )
+                    docker container ls -a |
+                        _fzf_complete '--header-lines=1' "$@"
+                    ;;
+
+                start )
+                    __fzf_complete_docker_start
+                    ;;
+
+                stop )
+                    __fzf_complete_docker_stop
+                    ;;
+
+                rm )
+                    # TODO Show all containers when invoked with -f
+                    docker container ls -a -f status=created -f status=exited |
+                        _fzf_complete '-m --header-lines=1' "$@"
+                    ;;
+            esac
+            ;;
+
+        exec )
+            __fzf_complete_docker_exec
+            ;;
+
+        image )
+            case "$subcmd" in
+                inspect )
+                    docker image ls | _fzf_complete '--header-lines=1' "$@"
+                    ;;
+
+                rm )
+                    docker image ls | _fzf_complete '-m --header-lines=1' "$@"
+                    ;;
+            esac
+            ;;
+
+        network | volume )
+            if [[ "$subcmd" == 'inspect' ]]; then
+                docker "$cmd" ls | _fzf_complete '--header-lines=1' "$@"
+            fi
+            ;;
+    esac
+}
+
+_fzf_complete_docker "$@"

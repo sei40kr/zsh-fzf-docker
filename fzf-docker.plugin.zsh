@@ -3,14 +3,4 @@
 
 fpath+="${0:h}/functions"
 
-autoload -Uz \
-         dcin \
-         dii \
-         dirm \
-         dni \
-         drm \
-         drmf \
-         dst \
-         dstp \
-         dvi \
-         dxb
+autoload -Uz _fzf_complete_docker _fzf_complete_docker_post
