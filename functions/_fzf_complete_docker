@@ -3,82 +3,84 @@
 # _fzf_complete_docker
 # author: Seong Yong-ju <sei40kr@gmail.com>
 
-__fzf_complete_docker_start() {
-    docker container ls -a -f status=created -f status=exited |
-        _fzf_complete '-m --header-lines=1' "$@"
-}
-
-__fzf_complete_docker_stop() {
-    docker container ls | _fzf_complete '-m --header-lines=1' "$@"
-}
-
-__fzf_complete_docker_exec() {
-    docker container ls | _fzf_complete '--header-lines=1' "$@"
-}
-
 _fzf_complete_docker() {
-    local tokens=( "${(z)1}" )
-    local cmd="${tokens[2]}"
-    local subcmd="${tokens[3]}"
+    local -a cmd=( "${=1}" )
+    local -a cmd_without_opts=( "${cmd[@]:#-*}" )
 
-    case "$cmd" in
-        start )
-            __fzf_complete_docker_start
-            ;;
-
-        stop )
-            __fzf_complete_docker_stop
+    case "${cmd_without_opts[2]}" in
+        image )
+            if [[ "${cmd_without_opts[3]}" == inspect ]]; then
+                docker image ls | _fzf_complete '--header-lines=1' "$@"
+                return
+            fi
             ;;
 
         container )
-            case "$subcmd" in
-                exec )
-                    __fzf_complete_docker_exec
-                    ;;
-
-                inspect )
-                    docker container ls -a |
-                        _fzf_complete '--header-lines=1' "$@"
-                    ;;
-
-                start )
-                    __fzf_complete_docker_start
-                    ;;
-
-                stop )
-                    __fzf_complete_docker_stop
-                    ;;
-
-                rm )
-                    # TODO Show all containers when invoked with -f
-                    docker container ls -a -f status=created -f status=exited |
-                        _fzf_complete '-m --header-lines=1' "$@"
-                    ;;
-            esac
-            ;;
-
-        exec )
-            __fzf_complete_docker_exec
-            ;;
-
-        image )
-            case "$subcmd" in
-                inspect )
-                    docker image ls | _fzf_complete '--header-lines=1' "$@"
-                    ;;
-
-                rm )
-                    docker image ls | _fzf_complete '-m --header-lines=1' "$@"
-                    ;;
-            esac
-            ;;
-
-        network | volume )
-            if [[ "$subcmd" == 'inspect' ]]; then
-                docker "$cmd" ls | _fzf_complete '--header-lines=1' "$@"
+            if [[ "${cmd_without_opts[3]}" == inspect ]]; then
+                docker container ls -a | _fzf_complete '--header-lines=1' "$@"
+                return
             fi
             ;;
+
+        network|volume )
+            case "${cmd_without_opts[3]}" in
+                inspect )
+                    docker "${cmd_without_opts[2]}" ls |
+                        _fzf_complete '--header-lines=1' "$@"
+                    return
+                    ;;
+
+                rm )
+                    docker "${cmd_without_opts[2]}" ls |
+                        _fzf_complete '-m --header-lines=1' "$@"
+                    return
+                    ;;
+            esac
+            ;;
     esac
+
+    # docker rmi / docker image rm
+    if [[ "${cmd_without_opts[2]}" == image && \
+          "${cmd_without_opts[3]}" == rm || \
+          "${cmd_without_opts[2]}" == rmi ]]; then
+        docker image ls | _fzf_complete '-m --header-lines=1' "$@"
+        return
+    fi
+
+    # docker exec / docker container exec
+    if [[ "${cmd_without_opts[2]}" == container && \
+          "${cmd_without_opts[3]}" == exec || \
+          "${cmd_without_opts[2]}" == exec ]]; then
+        docker container ls | _fzf_complete '--header-lines=1' "$@"
+        return
+    fi
+
+    # docker rm / docker container rm
+    if [[ "${cmd_without_opts[2]}" == container && \
+          "${cmd_without_opts[3]}" == rm || \
+          "${cmd_without_opts[2]}" == rm ]]; then
+        # TODO also show running containers if the command contains -f
+        docker container ls -a -f status=created -f status=exited |
+           _fzf_complete '-m --header-lines=1' "$@"
+        return
+    fi
+
+    # docker start / docker container start
+    if [[ "${cmd_without_opts[2]}" == container && \
+          "${cmd_without_opts[3]}" == start || \
+          "${cmd_without_opts[2]}" == start ]]; then
+        docker container ls -a -f status=created -f status=exited |
+            _fzf_complete '-m --header-lines=1' "$@"
+        return
+    fi
+
+    # docker stop / docker container stop
+    if [[ "${cmd_without_opts[2]}" == container && \
+          "${cmd_without_opts[3]}" == stop || \
+          "${cmd_without_opts[2]}" == stop ]]; then
+        docker container ls | _fzf_complete '-m --header-lines=1' "$@"
+        return
+    fi
 }
 
 _fzf_complete_docker "$@"
