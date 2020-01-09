@@ -1,5 +1,7 @@
 # zsh-fzf-docker
 
+Complete Docker resources with fzf.
+
 ## Example
 
 ```
