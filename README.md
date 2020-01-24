@@ -19,13 +19,13 @@ $ docker exec -it **
 
 ## Install
 
-### Install with [zplugin](https://github.com/zdharma/zplugin) (recommended)
+### Install with [zinit](https://github.com/zdharma/zinit) (recommended)
 
 ```sh
-zplugin ice src'shell/completion.zsh'
-zplugin light junegunn/fzf
+zinit ice src'shell/completion.zsh'
+zinit light junegunn/fzf
 
-zplugin light sei40kr/zsh-fzf-docker
+zinit light sei40kr/zsh-fzf-docker
 ```
 
 ### Install with [zplug](https://github.com/zplug/zplug)
